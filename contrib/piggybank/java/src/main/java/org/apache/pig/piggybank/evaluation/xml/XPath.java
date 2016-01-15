@@ -98,6 +98,10 @@ public class XPath extends EvalFunc<String> {
             if(input.size() > 2)
                 cache = (Boolean) input.get(2);
 
+            if (input.size() > 3) {
+                ignoreNamespace = (Boolean) input.get(3);
+            }
+
             if (!cache || xpath == null || !xml.equals(this.xml)) {
                 final InputSource source = new InputSource(new StringReader(xml));
 
@@ -185,8 +189,22 @@ public class XPath extends EvalFunc<String> {
             String[] individualNodes = xpathString.split(SPLITTER);
 
             for (String node : individualNodes) {
-                xpathStringWithLocalName = xpathStringWithLocalName.concat(QUERY_PREFIX + LOCAL_PREFIX + node
-                        + LOCAL_POSTFIX);
+                // Skip functions
+                if (node.endsWith("(")) {
+                    xpathStringWithLocalName = xpathStringWithLocalName.concat(node);
+                }
+                // Skip wildcards
+                else if (node.startsWith("*")) {
+                    xpathStringWithLocalName = xpathStringWithLocalName.concat(SPLITTER +node);
+                }
+                // Skip attributes
+                else if (node.startsWith("@")) {
+                    xpathStringWithLocalName = xpathStringWithLocalName.concat(SPLITTER + node);
+                }
+                else if (!node.isEmpty()){
+                    xpathStringWithLocalName = xpathStringWithLocalName.concat(QUERY_PREFIX + LOCAL_PREFIX + node
+                            + LOCAL_POSTFIX);
+                }
             }
             return xpathStringWithLocalName;
         } catch (Exception ex) {

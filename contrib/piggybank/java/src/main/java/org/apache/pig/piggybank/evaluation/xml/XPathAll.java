@@ -262,8 +262,22 @@ public class XPathAll extends EvalFunc<Tuple> {
             String[] individualNodes = xpathString.split(SPLITTER);
 
             for (String node : individualNodes) {
-                xpathStringWithLocalName = xpathStringWithLocalName.concat(QUERY_PREFIX + LOCAL_PREFIX + node
-                        + LOCAL_POSTFIX);
+                // Skip functions
+                if (node.endsWith("(")) {
+                    xpathStringWithLocalName = xpathStringWithLocalName.concat(node);
+                }
+                // Skip wildcards
+                else if (node.startsWith("*")) {
+                    xpathStringWithLocalName = xpathStringWithLocalName.concat(SPLITTER +node);
+                }
+                // Skip attributes
+                else if (node.startsWith("@")) {
+                    xpathStringWithLocalName = xpathStringWithLocalName.concat(SPLITTER + node);
+                }
+                else if (!node.isEmpty()){
+                    xpathStringWithLocalName = xpathStringWithLocalName.concat(QUERY_PREFIX + LOCAL_PREFIX + node
+                            + LOCAL_POSTFIX);
+                }
             }
 
             return xpathStringWithLocalName;
