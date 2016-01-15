@@ -61,7 +61,7 @@ public class XMLLoader extends LoadFunc {
     protected final RecordReader<LongWritable, Text> wrapped;
 
     /**Regular expression for XML tag identifier*/
-    private static final String XMLTagNameRegExp = "[a-zA-Z\\_][0-9a-zA-Z\\-_]+";
+    private static final String XMLTagNameRegExp = "[a-zA-Z\\_][0-9a-zA-Z\\-_:]+";
     /**
      * A regular expression that matches key parts in the XML text needed to
      * correctly parse it and find matches of the given identifier
